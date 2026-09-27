@@ -11,7 +11,7 @@
 #include <stdlib.h>                     // free
 
 #include <stdbool.h>                         // bool
-#include "ktrace/kTrace.h"                // KT_E, KT_RE, KT_T
+#include "corLog/corLog.h"                // COR_E, COR_RE, COR_T
 
 #include "corTree/CorNode.h"               // CorNode
 #include "corTree/corTreeTraceLevels.h"        // CorTreeTlFree
@@ -27,11 +27,11 @@ void corTreeFree(CorNode* kNodeP)
 {
   if (kNodeP->name != NULL)
   {
-    KT_T(CorTreeTlFree, "Freeing %s CorNode (%s) at %p", corTreeValueType(kNodeP->type), kNodeP->name, kNodeP);
+    COR_T(CorTreeTlFree, "Freeing %s CorNode (%s) at %p", corTreeValueType(kNodeP->type), kNodeP->name, kNodeP);
   }
   else
   {
-    KT_T(CorTreeTlFree, "Freeing %s CorNode at %p", corTreeValueType(kNodeP->type), kNodeP);
+    COR_T(CorTreeTlFree, "Freeing %s CorNode at %p", corTreeValueType(kNodeP->type), kNodeP);
   }
 
   if ((kNodeP->type == CorArray) || (kNodeP->type == CorObject))
