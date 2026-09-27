@@ -10,7 +10,7 @@ a sibling of corJson that produces or consumes the same tree.
 - **Language:** C
 - **License:** [Apache License 2.0](LICENSE)
 
-The only dependencies are **kalloc, corLog and kbase**.
+The only dependencies are **corAlloc, corLog and kbase**.
 
 ## Where it comes from
 
@@ -26,7 +26,7 @@ which made the tree depend on the parser. corTree's builders take the allocator
 itself:
 
 ```c
-CorNode* corTreeString(KAlloc* kaP, const char* name, const char* value);
+CorNode* corTreeString(CorAlloc* kaP, const char* name, const char* value);
 ```
 
 `NULL` still means `malloc`, exactly as a `NULL` `Kjson*` did.
@@ -38,7 +38,7 @@ typedef struct CorNode
 {
   char*            name;       // NULL/"" for an array item
   CorValueType     type;       // CorString, CorInt, CorFloat, CorBoolean, CorNull, CorObject, CorArray
-  unsigned char    flags;      // for the users of the library; in the padding, born 0 under kalloc
+  unsigned char    flags;      // for the users of the library; in the padding, born 0 under corAlloc
   CorValue         value;      // b, i, f, s, or - for a container - head and tail
   struct CorNode*  next;       // next sibling
 } CorNode;

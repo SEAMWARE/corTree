@@ -12,7 +12,7 @@
 
 #include "corLog/corLog.h"                // COR_E, COR_RE, COR_T
 #include "kbase/kBasicLog.h"            // K BasicLog macros
-#include "kalloc/KAlloc.h"                 // KAlloc
+#include "corAlloc/CorAlloc.h"             // CorAlloc
 #include "corTree/CorNode.h"               // CorNode
 #include "corTree/corTreeBuilder.h"            // corTreeString, corTreeArray, corTreeFloat, ...
 #include "corTree/corTreeClone.h"              // Own Interface
@@ -23,7 +23,7 @@
 //
 // corTreeClone - clone a node
 //
-CorNode* corTreeClone(KAlloc* kaP, CorNode* nodeP)
+CorNode* corTreeClone(CorAlloc* kaP, CorNode* nodeP)
 {
   CorNode* newNodeP = NULL;
 

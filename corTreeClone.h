@@ -10,7 +10,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 //
-#include "kalloc/KAlloc.h"                 // KAlloc
+#include "corAlloc/CorAlloc.h"             // CorAlloc
 #include "corTree/CorNode.h"               // CorNode
 
 
@@ -19,6 +19,6 @@
 //
 // corTreeClone - clone a node
 //
-extern CorNode* corTreeClone(KAlloc* kaP, CorNode* nodeP);
+extern CorNode* corTreeClone(CorAlloc* kaP, CorNode* nodeP);
 
 #endif  // CORTREE_CLONE_H_

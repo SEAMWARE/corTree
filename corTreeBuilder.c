@@ -13,10 +13,10 @@
 
 #include <stdbool.h>                              // bool
 #include "corLog/corLog.h"                // COR_E, COR_RE, COR_T
-#include "kalloc/kaAlloc.h"                  // kaAlloc
+#include "corAlloc/corAlloc.h"               // corAlloc
 
 #include "corTree/corTreeTraceLevels.h"             // KJ Log Trace Levels
-#include "kalloc/KAlloc.h"                  // KAlloc
+#include "corAlloc/CorAlloc.h"              // CorAlloc
 #include "corTree/CorNode.h"                    // CorNode
 #include "corTree/corTreeBuilder.h"                 // Own Interface
 
@@ -35,11 +35,11 @@
 // RETURN VALUE
 //   `corTreeObject` returns a CorNode of `CorObject` type.
 //
-CorNode* corTreeObject(KAlloc* kaP, const char* name)
+CorNode* corTreeObject(CorAlloc* kaP, const char* name)
 {
   int     nameLen = (name == NULL)? 0 : strlen(name);
   int     bufLen  = sizeof(CorNode) + nameLen + 1;
-  char*   buf     = (kaP != NULL)? kaAlloc(kaP, bufLen) : malloc(bufLen);
+  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : malloc(bufLen);
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)
@@ -74,11 +74,11 @@ CorNode* corTreeObject(KAlloc* kaP, const char* name)
 // RETURN VALUE
 //   `corTreeArray` returns a CorNode of `CorArray` type.
 //
-CorNode* corTreeArray(KAlloc* kaP, const char* name)
+CorNode* corTreeArray(CorAlloc* kaP, const char* name)
 {
   int     nameLen = (name == NULL)? 0 : strlen(name);
   int     bufLen  = sizeof(CorNode) + nameLen + 1;
-  char*   buf     = (kaP != NULL)? kaAlloc(kaP, bufLen) : malloc(bufLen);
+  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : malloc(bufLen);
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)
@@ -117,12 +117,12 @@ CorNode* corTreeArray(KAlloc* kaP, const char* name)
 //
 // FIXME: Include the 'value' in the malloc of 'buf' as well
 //
-CorNode* corTreeString(KAlloc* kaP, const char* name, const char* value)
+CorNode* corTreeString(CorAlloc* kaP, const char* name, const char* value)
 {
   int     nameLen  = (name  != NULL)?  strlen(name) : 0;
   int     valueLen = (value != NULL)?  strlen(value) : 0;
   int     bufLen   = sizeof(CorNode) + nameLen + 1 + valueLen + 1;
-  char*   buf      = (kaP != NULL)? kaAlloc(kaP, bufLen) : malloc(bufLen);
+  char*   buf      = (kaP != NULL)? corAlloc(kaP, bufLen) : malloc(bufLen);
   CorNode* nodeP    = (CorNode*) buf;
 
   if (nodeP == NULL)
@@ -177,11 +177,11 @@ CorNode* corTreeString(KAlloc* kaP, const char* name, const char* value)
 // RETURN VALUE
 //   `corTreeInteger` returns a CorNode of `CorInt` type with the value of the third parameter `value`
 //
-CorNode* corTreeInteger(KAlloc* kaP, const char* name, long long value)
+CorNode* corTreeInteger(CorAlloc* kaP, const char* name, long long value)
 {
   int     nameLen = (name == NULL)? 0 : strlen(name);
   int     bufLen  = sizeof(CorNode) + nameLen + 1;
-  char*   buf     = (kaP != NULL)? kaAlloc(kaP, bufLen) : malloc(bufLen);
+  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : malloc(bufLen);
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)
@@ -215,11 +215,11 @@ CorNode* corTreeInteger(KAlloc* kaP, const char* name, long long value)
 // RETURN VALUE
 //   `corTreeFloat` returns a CorNode of `CorFloat` type with the value of the third parameter `value`
 //
-CorNode* corTreeFloat(KAlloc* kaP, const char* name, double value)
+CorNode* corTreeFloat(CorAlloc* kaP, const char* name, double value)
 {
   int     nameLen = (name == NULL)? 0 : strlen(name);
   int     bufLen  = sizeof(CorNode) + nameLen + 1;
-  char*   buf     = (kaP != NULL)? kaAlloc(kaP, bufLen) : malloc(bufLen);
+  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : malloc(bufLen);
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)
@@ -252,11 +252,11 @@ CorNode* corTreeFloat(KAlloc* kaP, const char* name, double value)
 // RETURN VALUE
 //   `corTreeNull` returns a CorNode of `CorNull` type.
 //
-CorNode* corTreeNull(KAlloc* kaP, const char* name)
+CorNode* corTreeNull(CorAlloc* kaP, const char* name)
 {
   int     nameLen = (name == NULL)? 0 : strlen(name);
   int     bufLen  = sizeof(CorNode) + nameLen + 1;
-  char*   buf     = (kaP != NULL)? kaAlloc(kaP, bufLen) : malloc(bufLen);
+  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : malloc(bufLen);
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)
@@ -289,11 +289,11 @@ CorNode* corTreeNull(KAlloc* kaP, const char* name)
 // RETURN VALUE
 //   `corTreeBoolean` returns a CorNode of `CorBoolean` type with the value of the third parameter `value`
 //
-CorNode* corTreeBoolean(KAlloc* kaP, const char* name, bool value)
+CorNode* corTreeBoolean(CorAlloc* kaP, const char* name, bool value)
 {
   int     nameLen = (name == NULL)? 0 : strlen(name);
   int     bufLen  = sizeof(CorNode) + nameLen + 1;
-  char*   buf     = (kaP != NULL)? kaAlloc(kaP, bufLen) : malloc(bufLen);
+  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : malloc(bufLen);
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)
