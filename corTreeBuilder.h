@@ -28,9 +28,9 @@ extern CorNode* corTreeInteger(KAlloc* kaP, const char* name, long long value);
 extern CorNode* corTreeFloat(KAlloc* kaP, const char* name, double value);
 extern CorNode* corTreeNull(KAlloc* kaP, const char* name);
 extern CorNode* corTreeBoolean(KAlloc* kaP, const char* name, bool value);
-extern void    corTreeChildRemove(CorNode* container, CorNode* child);
-extern void    corTreeChildAdd(CorNode* container, CorNode* child);
-extern void    corTreeChildAddSorted(CorNode* container, CorNode* child);
-extern void    corTreeChildAddSortedReverse(CorNode* container, CorNode* child);
+extern CorNode* corTreeChildRemove(CorNode* container, CorNode* child);
+extern void     corTreeChildAdd(CorNode* container, CorNode* child);
+extern void     corTreeChildAddSorted(CorNode* container, CorNode* child);
+extern void     corTreeChildAddSortedReverse(CorNode* container, CorNode* child);
 
 #endif  // CORTREE_BUILDER_H_

@@ -350,7 +350,10 @@ void corTreeChildAdd(CorNode* container, CorNode* child)
 //   container - pointer to the father (container) of the child to be removed
 //   child     - pointer to the child to be removed
 //
-void corTreeChildRemove(CorNode* container, CorNode* child)
+// RETURN VALUE
+//   'child' if it was found in 'container' and unlinked, NULL if it was not there
+//
+CorNode* corTreeChildRemove(CorNode* container, CorNode* child)
 {
   CorNode* prevP = NULL;
   CorNode* nodeP = container->value.firstChildP;
@@ -358,7 +361,7 @@ void corTreeChildRemove(CorNode* container, CorNode* child)
   while (nodeP != child)
   {
     if (nodeP == NULL)
-      return;  // Not found
+      return NULL;  // Not found
 
     prevP = nodeP;
     nodeP = nodeP->next;
@@ -382,6 +385,8 @@ void corTreeChildRemove(CorNode* container, CorNode* child)
   }
 
   nodeP->next = NULL;
+
+  return nodeP;
 }
 
 
