@@ -52,7 +52,7 @@ typedef struct CorNode
 | | |
 |---|---|
 | build | `corTreeObject`, `corTreeArray`, `corTreeString`, `corTreeInteger`, `corTreeFloat`, `corTreeBoolean`, `corTreeNull` |
-| edit | `corTreeChildAdd`, `corTreeChildAddSorted`, `corTreeChildAddSortedReverse`, `corTreeChildPrepend`, `corTreeChildRemove`, `corTreeChildReplace`, `corTreeChildAddOrReplace`, `corTreeNodeDecouple` |
+| edit | `corTreeChildAdd`, `corTreeChildAddSorted`, `corTreeChildAddSortedReverse`, `corTreeChildPrepend`, `corTreeChildRemove`, `corTreeChildMove`, `corTreeChildReplace`, `corTreeChildAddOrReplace`, `corTreeNodeDecouple` |
 | find | `corTreeLookup`, `corTreeNavigate`, `corTreeStringSiblingFind`, `corTreeStringValueLookupInArray`, `corTreeChildCount` |
 | copy, free | `corTreeClone`, `corTreeFree` |
 | sort | `corTreeSort`, `corTreeArraySort`, `corTreeStringArraySort`, `corTreeStringArraySortedInsert` |

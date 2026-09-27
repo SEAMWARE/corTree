@@ -32,6 +32,7 @@ LIB_SOURCES   = CorNode.c                          \
                 corTreeBuilder.c                   \
                 corTreeChildAddOrReplace.c         \
                 corTreeChildCount.c                \
+                corTreeChildMove.c                 \
                 corTreeChildPrepend.c              \
                 corTreeChildReplace.c              \
                 corTreeClone.c                     \
