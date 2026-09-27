@@ -12,7 +12,7 @@
 //
 #include <stdbool.h>                         // bool
 
-#include "kalloc/KAlloc.h"                   // KAlloc
+#include "corAlloc/CorAlloc.h"               // CorAlloc
 #include "corTree/CorNode.h"                 // CorNode
 
 
@@ -21,13 +21,13 @@
 //
 // corTree builder functions -
 //
-extern CorNode* corTreeObject(KAlloc* kaP, const char* name);
-extern CorNode* corTreeArray(KAlloc* kaP, const char* name);
-extern CorNode* corTreeString(KAlloc* kaP, const char* name, const char* value);
-extern CorNode* corTreeInteger(KAlloc* kaP, const char* name, long long value);
-extern CorNode* corTreeFloat(KAlloc* kaP, const char* name, double value);
-extern CorNode* corTreeNull(KAlloc* kaP, const char* name);
-extern CorNode* corTreeBoolean(KAlloc* kaP, const char* name, bool value);
+extern CorNode* corTreeObject(CorAlloc* kaP, const char* name);
+extern CorNode* corTreeArray(CorAlloc* kaP, const char* name);
+extern CorNode* corTreeString(CorAlloc* kaP, const char* name, const char* value);
+extern CorNode* corTreeInteger(CorAlloc* kaP, const char* name, long long value);
+extern CorNode* corTreeFloat(CorAlloc* kaP, const char* name, double value);
+extern CorNode* corTreeNull(CorAlloc* kaP, const char* name);
+extern CorNode* corTreeBoolean(CorAlloc* kaP, const char* name, bool value);
 extern CorNode* corTreeChildRemove(CorNode* container, CorNode* child);
 extern void     corTreeChildAdd(CorNode* container, CorNode* child);
 extern void     corTreeChildAddSorted(CorNode* container, CorNode* child);
