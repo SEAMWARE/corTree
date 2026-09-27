@@ -10,8 +10,7 @@
 #include <stdio.h>                      // NULL
 #include <string.h>                     // strcmp
 
-#include "kbase/kStrEq.h"               // kStrEq
-#include "kbase/kLibLog.h"              // K Log macros
+#include "corBase/corStrEq.h"           // corStrEq
 
 #include "corTree/corTreeTraceLevels.h"        // Kjl*
 #include "corTree/CorNode.h"               // CorNode
@@ -37,7 +36,7 @@ CorNode* corTreeLookup(CorNode* container, const char* name)
 
     for (current = container->value.head; current != NULL; current = current->next)
     {
-      if (kStrEq(current->name, name) == true)
+      if (corStrEq(current->name, name) == true)
         return current;
     }
   }

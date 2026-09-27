@@ -9,8 +9,7 @@
 //
 #include <stdio.h>                      // sprintf
 
-#include "kbase/kMacros.h"              // K_FT, et al
-#include "kbase/kLibLog.h"              // K Log macros
+#include "corBase/corMacros.h"          // COR_FT, et al
 
 #include "corTree/CorNode.h"               // Own interface
 
@@ -51,7 +50,7 @@ char* corTreeValue(CorNode* nodeP, char* buf, int bufLen)
   case CorString:   return nodeP->value.s;
   case CorObject:   return "Object";
   case CorArray:    return "Array";
-  case CorBoolean:  return K_FT(nodeP->value.b == true);
+  case CorBoolean:  return COR_FT(nodeP->value.b == true);
   case CorNull:     return "Null";
 
   case CorInt:

@@ -10,7 +10,7 @@ a sibling of corJson that produces or consumes the same tree.
 - **Language:** C
 - **License:** [Apache License 2.0](LICENSE)
 
-The only dependencies are **corAlloc, corLog and kbase**.
+The only dependencies are **corAlloc, corLog and corBase**.
 
 ## Where it comes from
 
