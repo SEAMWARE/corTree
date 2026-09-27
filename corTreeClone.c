@@ -11,7 +11,6 @@
 #include <string.h>                     // strcmp
 
 #include "corLog/corLog.h"                // COR_E, COR_RE, COR_T
-#include "kbase/kBasicLog.h"            // K BasicLog macros
 #include "corAlloc/CorAlloc.h"             // CorAlloc
 #include "corTree/CorNode.h"               // CorNode
 #include "corTree/corTreeBuilder.h"            // corTreeString, corTreeArray, corTreeFloat, ...
