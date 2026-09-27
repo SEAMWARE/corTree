@@ -56,7 +56,7 @@ CorNode* corTreeClone(KAlloc* kaP, CorNode* nodeP)
     {
       CorNode* arrItemP;
 
-      for (arrItemP = nodeP->value.firstChildP; arrItemP != NULL; arrItemP = arrItemP->next)
+      for (arrItemP = nodeP->value.head; arrItemP != NULL; arrItemP = arrItemP->next)
       {
         CorNode* cloneP = corTreeClone(kaP, arrItemP);
 
@@ -78,7 +78,7 @@ CorNode* corTreeClone(KAlloc* kaP, CorNode* nodeP)
     {
       CorNode* itemP;
 
-      for (itemP = nodeP->value.firstChildP; itemP != NULL; itemP = itemP->next)
+      for (itemP = nodeP->value.head; itemP != NULL; itemP = itemP->next)
       {
         CorNode* cloneP = corTreeClone(kaP, itemP);
 

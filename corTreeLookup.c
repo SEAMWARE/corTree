@@ -35,7 +35,7 @@ CorNode* corTreeLookup(CorNode* container, const char* name)
   {
     CorNode* current;
 
-    for (current = container->value.firstChildP; current != NULL; current = current->next)
+    for (current = container->value.head; current != NULL; current = current->next)
     {
       if (kStrEq(current->name, name) == true)
         return current;
@@ -65,7 +65,7 @@ CorNode* corTreeLookupWithStrcmp(CorNode* container, char* name)
   {
     CorNode* current;
 
-    for (current = container->value.firstChildP; current != NULL; current = current->next)
+    for (current = container->value.head; current != NULL; current = current->next)
     {
       if (strcmp(current->name, name) == 0)
         return current;

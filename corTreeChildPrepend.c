@@ -20,10 +20,10 @@
 //
 void corTreeChildPrepend(CorNode* container, CorNode* child)
 {
-  // Empty container - the new child is also the last one, or the next corTreeChildAdd dereferences a NULL lastChild
-  if (container->value.firstChildP == NULL)
-    container->lastChild = child;
+  // Empty container - the new child is also the last one, or the next corTreeChildAdd dereferences a NULL tail
+  if (container->value.head == NULL)
+    container->value.tail = child;
 
-  child->next = container->value.firstChildP;
-  container->value.firstChildP = child;
+  child->next = container->value.head;
+  container->value.head = child;
 }

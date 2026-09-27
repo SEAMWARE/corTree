@@ -33,18 +33,18 @@ void corTreeStringArraySort(CorNode* arrayP)
   //
   // Put all items in rawP, leaving arrayP empty
   //
-  rawP->value.firstChildP   = arrayP->value.firstChildP;
-  rawP->lastChild           = arrayP->lastChild;
-  arrayP->value.firstChildP = NULL;
-  arrayP->lastChild         = NULL;
+  rawP->value.head          = arrayP->value.head;
+  rawP->value.tail          = arrayP->value.tail;
+  arrayP->value.head = NULL;
+  arrayP->value.tail        = NULL;
 
   //
   // Loop over rawP, find smallest, then just move it to arrayP
   //
-  while (rawP->value.firstChildP != NULL)
+  while (rawP->value.head != NULL)
   {
     // Set the very first item as the smallest one (minP)
-    CorNode* minP = rawP->value.firstChildP;
+    CorNode* minP = rawP->value.head;
 
     // Compare with all the rest and set minP accordingly
     for (CorNode* tmpP = minP->next; tmpP != NULL; tmpP = tmpP->next)

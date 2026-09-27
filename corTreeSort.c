@@ -24,7 +24,7 @@
 // Implementation: in-place selection sort. Each iteration finds the minimum
 // node in the unsorted suffix and splices it onto the tail of the sorted
 // prefix. The previous implementation had a bug — it always prepended to the
-// global firstChildP rather than the head of the unsorted suffix, so already-
+// global head rather than the head of the unsorted suffix, so already-
 // sorted prefix elements got displaced and the result was neither ascending
 // nor descending. (It was symmetric across calls though, which is why
 // MongoCommonUpdate.cpp's compare-after-sort still produced the right answer
@@ -35,11 +35,11 @@ void corTreeSort(CorNode* nodeP)
   if ((nodeP->type != CorObject) && (nodeP->type != CorArray))  // Arrays can contain objects, that can be sorted,
     return;
 
-  if (nodeP->value.firstChildP == NULL)
+  if (nodeP->value.head == NULL)
     return;
 
   // Recursive calls for all child items that are Object or Array
-  for (CorNode* currentP = nodeP->value.firstChildP; currentP != NULL; currentP = currentP->next)
+  for (CorNode* currentP = nodeP->value.head; currentP != NULL; currentP = currentP->next)
   {
     if ((currentP->type == CorObject) || (currentP->type == CorArray))
       corTreeSort(currentP);
@@ -55,7 +55,7 @@ void corTreeSort(CorNode* nodeP)
 
   while (1)
   {
-    CorNode* unsortedHead = (sortedTail == NULL) ? nodeP->value.firstChildP : sortedTail->next;
+    CorNode* unsortedHead = (sortedTail == NULL) ? nodeP->value.head : sortedTail->next;
 
     if ((unsortedHead == NULL) || (unsortedHead->next == NULL))
       break;
@@ -80,8 +80,8 @@ void corTreeSort(CorNode* nodeP)
     corTreeChildRemove(nodeP, minP);
     if (sortedTail == NULL)
     {
-      minP->next = nodeP->value.firstChildP;
-      nodeP->value.firstChildP = minP;
+      minP->next = nodeP->value.head;
+      nodeP->value.head = minP;
     }
     else
     {
@@ -91,12 +91,12 @@ void corTreeSort(CorNode* nodeP)
     sortedTail = minP;
   }
 
-  // Refresh lastChild (corTreeChildRemove may have left it stale)
-  CorNode* lastP = nodeP->value.firstChildP;
+  // Refresh the tail (corTreeChildRemove may have left it stale)
+  CorNode* lastP = nodeP->value.head;
   if (lastP != NULL)
   {
     while (lastP->next != NULL)
       lastP = lastP->next;
-    nodeP->lastChild = lastP;
+    nodeP->value.tail = lastP;
   }
 }

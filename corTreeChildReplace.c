@@ -22,7 +22,7 @@ void corTreeChildReplace(CorNode* container, CorNode* outP, CorNode* inP)
   CorNode* prev  = NULL;
   int     found = 0;
 
-  for (CorNode* childP = container->value.firstChildP; childP != NULL; childP = childP->next)
+  for (CorNode* childP = container->value.head; childP != NULL; childP = childP->next)
   {
     if (childP == outP)
     {
@@ -38,7 +38,7 @@ void corTreeChildReplace(CorNode* container, CorNode* outP, CorNode* inP)
 
   if (prev == NULL)
   {
-    container->value.firstChildP = inP;
+    container->value.head = inP;
     inP->next = outP->next;
   }
   else
@@ -47,6 +47,6 @@ void corTreeChildReplace(CorNode* container, CorNode* outP, CorNode* inP)
     inP->next  = outP->next;
   }
 
-  if (container->lastChild == outP)
-    container->lastChild = inP;
+  if (container->value.tail == outP)
+    container->value.tail = inP;
 }

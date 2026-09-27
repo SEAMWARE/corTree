@@ -19,7 +19,7 @@
 // corTreeChildMove - move a child from one container to the end of another
 //
 // corTreeChildAdd alone is NOT a move: it overwrites child->next, which truncates
-// 'from' after 'child' and leaves 'from->lastChild' pointing into 'to'.
+// 'from' after 'child' and leaves 'from->value.tail' pointing into 'to'.
 //
 extern void corTreeChildMove(CorNode* from, CorNode* to, CorNode* child);
 
