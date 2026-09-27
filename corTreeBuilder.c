@@ -12,7 +12,7 @@
 #include <stdlib.h>                          // malloc
 
 #include <stdbool.h>                              // bool
-#include "ktrace/kTrace.h"                // KT_E, KT_RE, KT_T
+#include "corLog/corLog.h"                // COR_E, COR_RE, COR_T
 #include "kalloc/kaAlloc.h"                  // kaAlloc
 
 #include "corTree/corTreeTraceLevels.h"             // KJ Log Trace Levels
@@ -43,7 +43,7 @@ CorNode* corTreeObject(KAlloc* kaP, const char* name)
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)
-    KT_RE(NULL, "malloc failed to allocate %d bytes", bufLen);
+    COR_RE(NULL, "malloc failed to allocate %d bytes", bufLen);
 
   if (name != NULL)
   {
@@ -82,7 +82,7 @@ CorNode* corTreeArray(KAlloc* kaP, const char* name)
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)
-    KT_RE(NULL, "malloc failed to allocate %d bytes", bufLen);
+    COR_RE(NULL, "malloc failed to allocate %d bytes", bufLen);
 
   if (name != NULL)
   {
@@ -136,7 +136,7 @@ CorNode* corTreeString(KAlloc* kaP, const char* name, const char* value)
       return corTreeString(kaP, name, "too big string");
     }
     else
-      KT_RE(NULL, "malloc failed to allocate %d bytes", bufLen);
+      COR_RE(NULL, "malloc failed to allocate %d bytes", bufLen);
   }
 
   if (name != NULL)
@@ -185,7 +185,7 @@ CorNode* corTreeInteger(KAlloc* kaP, const char* name, long long value)
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)
-    KT_RE(NULL, "malloc failed to allocate %d bytes", bufLen);
+    COR_RE(NULL, "malloc failed to allocate %d bytes", bufLen);
 
   if (name != NULL)
   {
@@ -223,7 +223,7 @@ CorNode* corTreeFloat(KAlloc* kaP, const char* name, double value)
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)
-    KT_RE(NULL, "malloc failed to allocate %d bytes", bufLen);
+    COR_RE(NULL, "malloc failed to allocate %d bytes", bufLen);
 
   if (name != NULL)
   {
@@ -260,7 +260,7 @@ CorNode* corTreeNull(KAlloc* kaP, const char* name)
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)
-    KT_RE(NULL, "malloc failed to allocate %d bytes", bufLen);
+    COR_RE(NULL, "malloc failed to allocate %d bytes", bufLen);
 
   if (name != NULL)
   {
@@ -297,7 +297,7 @@ CorNode* corTreeBoolean(KAlloc* kaP, const char* name, bool value)
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)
-    KT_RE(NULL, "malloc failed to allocate %d bytes", bufLen);
+    COR_RE(NULL, "malloc failed to allocate %d bytes", bufLen);
 
   if (name != NULL)
   {

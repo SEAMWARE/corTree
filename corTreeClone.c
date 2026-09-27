@@ -10,7 +10,7 @@
 #include <stdio.h>                      // NULL
 #include <string.h>                     // strcmp
 
-#include "ktrace/kTrace.h"                // KT_E, KT_RE, KT_T
+#include "corLog/corLog.h"                // COR_E, COR_RE, COR_T
 #include "kbase/kBasicLog.h"            // K BasicLog macros
 #include "kalloc/KAlloc.h"                 // KAlloc
 #include "corTree/CorNode.h"               // CorNode
@@ -62,7 +62,7 @@ CorNode* corTreeClone(KAlloc* kaP, CorNode* nodeP)
 
         if (cloneP == NULL)
         {
-          KT_E("Error cloning array item - out of memory?");
+          COR_E("Error cloning array item - out of memory?");
           return NULL;
         }
 
@@ -84,7 +84,7 @@ CorNode* corTreeClone(KAlloc* kaP, CorNode* nodeP)
 
         if (cloneP == NULL)
         {
-          KT_E("Error cloning CorNode '%s' - out of memory?", itemP->name);
+          COR_E("Error cloning CorNode '%s' - out of memory?", itemP->name);
           return NULL;
         }
 
@@ -95,12 +95,12 @@ CorNode* corTreeClone(KAlloc* kaP, CorNode* nodeP)
 
   case CorNone:
   default:
-    KT_E("Invalid KJSON Value Type for node '%s'", nodeP->name);
+    COR_E("Invalid KJSON Value Type for node '%s'", nodeP->name);
     return NULL;
   }
 
   if (newNodeP == NULL)
-    KT_E("Error cloning CorNode '%s' - out of memory?", nodeP->name);
+    COR_E("Error cloning CorNode '%s' - out of memory?", nodeP->name);
 
 
   return newNodeP;
