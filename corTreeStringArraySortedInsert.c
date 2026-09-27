@@ -22,7 +22,7 @@
 void corTreeStringArraySortedInsert(CorNode* arrayP, CorNode* newItemP)
 {
   CorNode* prev  = NULL;
-  CorNode* itemP = arrayP->value.firstChildP;
+  CorNode* itemP = arrayP->value.head;
 
   while (itemP != NULL)
   {
@@ -42,7 +42,7 @@ void corTreeStringArraySortedInsert(CorNode* arrayP, CorNode* newItemP)
     {
       prev->next        = newItemP;
       newItemP->next    = NULL;
-      arrayP->lastChild = newItemP;
+      arrayP->value.tail = newItemP;
     }
     else  // Insert the middle
     {
@@ -52,10 +52,10 @@ void corTreeStringArraySortedInsert(CorNode* arrayP, CorNode* newItemP)
   }
   else  // Insert as first item
   {
-    newItemP->next = arrayP->value.firstChildP;
-    arrayP->value.firstChildP = newItemP;
+    newItemP->next = arrayP->value.head;
+    arrayP->value.head = newItemP;
 
-    if (arrayP->lastChild == NULL)
-      arrayP->lastChild = newItemP;
+    if (arrayP->value.tail == NULL)
+      arrayP->value.tail = newItemP;
   }
 }

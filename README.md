@@ -39,9 +39,8 @@ typedef struct CorNode
   char*            name;       // NULL/"" for an array item
   CorValueType     type;       // CorString, CorInt, CorFloat, CorBoolean, CorNull, CorObject, CorArray
   unsigned char    flags;      // for the users of the library; in the padding, born 0 under kalloc
-  CorValue         value;      // b, i, f, s, or firstChildP
+  CorValue         value;      // b, i, f, s, or - for a container - head and tail
   struct CorNode*  next;       // next sibling
-  struct CorNode*  lastChild;  // last child of a container
 } CorNode;
 ```
 

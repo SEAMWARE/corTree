@@ -20,7 +20,7 @@
 int corTreeChildCount(CorNode* containerP)
 {
   int     children = 0;
-  CorNode* childP   = containerP->value.firstChildP;
+  CorNode* childP   = containerP->value.head;
 
   while (childP != NULL)
   {

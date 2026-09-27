@@ -28,7 +28,7 @@ CorNode* corTreeStringValueLookupInArray(CorNode* stringArray, const char* value
     if ((stringArray->type != CorArray) && (stringArray->type != CorObject))
       return NULL;
 
-    for (CorNode* nodeP = stringArray->value.firstChildP; nodeP != NULL; nodeP = nodeP->next)
+    for (CorNode* nodeP = stringArray->value.head; nodeP != NULL; nodeP = nodeP->next)
     {
       if (nodeP->type != CorString)
         continue;

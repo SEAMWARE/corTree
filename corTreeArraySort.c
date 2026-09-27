@@ -72,8 +72,8 @@ int corTreeNodeCompare(CorNode* aP, CorNode* bP)
   case CorObject:
   case CorArray:
   {
-    CorNode* aChildP = aP->value.firstChildP;
-    CorNode* bChildP = bP->value.firstChildP;
+    CorNode* aChildP = aP->value.head;
+    CorNode* bChildP = bP->value.head;
 
     while ((aChildP != NULL) && (bChildP != NULL))
     {
@@ -118,17 +118,17 @@ static void elementsOrder(CorNode* arrayP)
   //
   // Put all items in rawP, leaving arrayP empty
   //
-  rawP->value.firstChildP   = arrayP->value.firstChildP;
-  rawP->lastChild           = arrayP->lastChild;
-  arrayP->value.firstChildP = NULL;
-  arrayP->lastChild         = NULL;
+  rawP->value.head          = arrayP->value.head;
+  rawP->value.tail          = arrayP->value.tail;
+  arrayP->value.head = NULL;
+  arrayP->value.tail        = NULL;
 
   //
   // Loop over rawP, find smallest, then just move it to arrayP
   //
-  while (rawP->value.firstChildP != NULL)
+  while (rawP->value.head != NULL)
   {
-    CorNode* minP = rawP->value.firstChildP;
+    CorNode* minP = rawP->value.head;
 
     for (CorNode* tmpP = minP->next; tmpP != NULL; tmpP = tmpP->next)
     {
@@ -152,7 +152,7 @@ static void elementsOrder(CorNode* arrayP)
 //
 static void containerOrder(CorNode* nodeP)
 {
-  for (CorNode* childP = nodeP->value.firstChildP; childP != NULL; childP = childP->next)
+  for (CorNode* childP = nodeP->value.head; childP != NULL; childP = childP->next)
   {
     if ((childP->type == CorObject) || (childP->type == CorArray))
       containerOrder(childP);
@@ -173,7 +173,7 @@ void corTreeArraySort(CorNode* arrayP)
   if (arrayP->type != CorArray)
     return;
 
-  if (arrayP->value.firstChildP == NULL)
+  if (arrayP->value.head == NULL)
     return;
 
   //

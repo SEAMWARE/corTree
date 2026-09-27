@@ -23,8 +23,8 @@ void corTreeNodeDecouple(CorNode* parent, CorNode* nodeToDecouple, CorNode* prev
   if (prev != NULL)
     prev->next = nodeToDecouple->next;
   else
-    parent->value.firstChildP = nodeToDecouple->next;
+    parent->value.head = nodeToDecouple->next;
 
-  if (parent->lastChild == nodeToDecouple)
-    parent->lastChild = prev;
+  if (parent->value.tail == nodeToDecouple)
+    parent->value.tail = prev;
 }

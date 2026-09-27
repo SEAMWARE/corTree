@@ -36,7 +36,7 @@ void corTreeFree(CorNode* kNodeP)
 
   if ((kNodeP->type == CorArray) || (kNodeP->type == CorObject))
   {
-    CorNode* nodeP = kNodeP->value.firstChildP;
+    CorNode* nodeP = kNodeP->value.head;
 
     while (nodeP != NULL)
     {

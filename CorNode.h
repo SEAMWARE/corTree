@@ -41,13 +41,19 @@ struct CorNode;
 //
 // CorValue - value of a node in the JSON tree
 //
+// 16 bytes: a scalar uses the first 8, a container's head/tail use all 16.
+//
 typedef union CorValue
 {
-  bool           b;
-  long long       i;
-  double          f;
-  char*           s;
-  struct CorNode*  firstChildP;
+  bool             b;
+  long long        i;
+  double           f;
+  char*            s;
+  struct                         // Object and Array: the children, a singly linked list via 'next'
+  {
+    struct CorNode*  head;       // First child, NULL for an empty container
+    struct CorNode*  tail;       // Last child - only a container has one, so it lives here and not in every node
+  };
 } CorValue;
 
 
@@ -60,12 +66,9 @@ typedef struct CorNode
 {
   char*           name;        // The name of the node, "" if father is an Array
   CorValueType     type;        // The type of the node. Number, String, Object, Array, ...
-  unsigned char   flags;       // Bit flags for users of the lib; lands in the type->value alignment padding (CorNode stays 40 bytes), and kalloc zeroes every allocation so it is born 0.
+  unsigned char   flags;       // Bit flags for users of the lib; lands in the type->value alignment padding (CorNode is 40 bytes), and kalloc zeroes every allocation so it is born 0.
   CorValue         value;       // The value of the node - see CorValue
   struct CorNode*  next;        // Pointer to the next Sibling
-  struct CorNode*  lastChild;   // Pointer to the last child of this node - FIXME: to be removed (move to struct KjContainer?)
-
-
 } CorNode;
 
 

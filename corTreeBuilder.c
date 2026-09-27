@@ -55,8 +55,8 @@ CorNode* corTreeObject(KAlloc* kaP, const char* name)
 
   nodeP->type              = CorObject;
   nodeP->next              = NULL;
-  nodeP->value.firstChildP = NULL;
-  nodeP->lastChild         = NULL;
+  nodeP->value.head = NULL;
+  nodeP->value.tail        = NULL;
 
   return nodeP;
 }
@@ -94,8 +94,8 @@ CorNode* corTreeArray(KAlloc* kaP, const char* name)
 
   nodeP->type              = CorArray;
   nodeP->next              = NULL;
-  nodeP->value.firstChildP = NULL;
-  nodeP->lastChild         = NULL;
+  nodeP->value.head = NULL;
+  nodeP->value.tail        = NULL;
 
   return nodeP;
 }
@@ -330,12 +330,12 @@ CorNode* corTreeBoolean(KAlloc* kaP, const char* name, bool value)
 void corTreeChildAdd(CorNode* container, CorNode* child)
 {
   // First child?
-  if (container->value.firstChildP != NULL)
-    container->lastChild->next = child;
+  if (container->value.head != NULL)
+    container->value.tail->next = child;
   else
-    container->value.firstChildP  = child;
+    container->value.head         = child;
 
-  container->lastChild = child;
+  container->value.tail = child;
 
   child->next = NULL;
 }
@@ -356,7 +356,7 @@ void corTreeChildAdd(CorNode* container, CorNode* child)
 CorNode* corTreeChildRemove(CorNode* container, CorNode* child)
 {
   CorNode* prevP = NULL;
-  CorNode* nodeP = container->value.firstChildP;
+  CorNode* nodeP = container->value.head;
 
   while (nodeP != child)
   {
@@ -367,16 +367,16 @@ CorNode* corTreeChildRemove(CorNode* container, CorNode* child)
     nodeP = nodeP->next;
   }
 
-  if (nodeP == container->value.firstChildP)  // Hit in beginning of list
+  if (nodeP == container->value.head)         // Hit in beginning of list
   {
-    container->value.firstChildP = nodeP->next;
+    container->value.head = nodeP->next;
 
-    if (container->lastChild == nodeP)  // Only ONE item in list?
-      container->lastChild = NULL;
+    if (container->value.tail == nodeP) // Only ONE item in list?
+      container->value.tail = NULL;
   }
-  else if (nodeP == container->lastChild)  // Hit in end of list
+  else if (nodeP == container->value.tail) // Hit in end of list
   {
-    container->lastChild = prevP;
+    container->value.tail = prevP;
     prevP->next          = NULL;
   }
   else  // Hit in the middle of the list
@@ -407,17 +407,17 @@ void corTreeChildAddSorted(CorNode* container, CorNode* child)
   //
   // First child to be added?
   //
-  if (container->value.firstChildP == NULL)
+  if (container->value.head == NULL)
   {
-    container->value.firstChildP = child;
-    container->lastChild         = child;
+    container->value.head = child;
+    container->value.tail        = child;
     child->next                  = NULL;
 
     return;
   }
 
   // Find where to insert the new node
-  CorNode* current     = container->value.firstChildP;
+  CorNode* current     = container->value.head;
   CorNode* prev        = NULL;
   char    childName0  = child->name[0];
 
@@ -469,12 +469,12 @@ void corTreeChildAddSorted(CorNode* container, CorNode* child)
   if (prev == NULL)
   {
     child->next                  = current;
-    container->value.firstChildP = child;
+    container->value.head = child;
   }
   else if (current == NULL)
   {
-    container->lastChild->next = child;
-    container->lastChild       = child;
+    container->value.tail->next = child;
+    container->value.tail      = child;
     child->next                = NULL;
   }
   else
@@ -502,17 +502,17 @@ void corTreeChildAddSortedReverse(CorNode* container, CorNode* child)
   //
   // First child to be added?
   //
-  if (container->value.firstChildP == NULL)
+  if (container->value.head == NULL)
   {
-    container->value.firstChildP   = child;
-    container->lastChild           = child;
+    container->value.head          = child;
+    container->value.tail          = child;
     child->next                    = NULL;
 
     return;
   }
 
   // Find where to insert the new node
-  CorNode* current     = container->value.firstChildP;
+  CorNode* current     = container->value.head;
   CorNode* prev        = NULL;
   char    childName0  = child->name[0];
 
@@ -564,12 +564,12 @@ void corTreeChildAddSortedReverse(CorNode* container, CorNode* child)
   if (prev == NULL)
   {
     child->next                  = current;
-    container->value.firstChildP = child;
+    container->value.head = child;
   }
   else if (current == NULL)
   {
-    container->lastChild->next = child;
-    container->lastChild       = child;
+    container->value.tail->next = child;
+    container->value.tail      = child;
     child->next                = NULL;
   }
   else
