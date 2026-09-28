@@ -15,6 +15,8 @@
 // the nodes in the JSON tree that is created as output of the parse step.
 //
 #include <stdbool.h>                         // bool
+#include <stddef.h>                          // offsetof
+#include <stdint.h>                          // uint16_t
 
 
 
@@ -66,10 +68,25 @@ typedef struct CorNode
 {
   char*           name;        // The name of the node, "" if father is an Array
   CorValueType     type;        // The type of the node. Number, String, Object, Array, ...
-  unsigned char   flags;       // Bit flags for users of the lib; lands in the type->value alignment padding (CorNode is 40 bytes), and kalloc zeroes every allocation so it is born 0.
+  unsigned char   flags;       // Bit flags for users of the lib - opaque to corTree
+  uint16_t        termId;      // Term id for users of the lib (NGSI-LD: which core term, 0 = none) - opaque to corTree
   CorValue         value;       // The value of the node - see CorValue
   struct CorNode*  next;        // Pointer to the next Sibling
 } CorNode;
+
+//
+// flags and termId live in the type->value alignment padding: the node stays 40 bytes.
+// Every builder zeroes both and corTreeClone copies both - a tree builder that does
+// neither (a parser, a DB reader) must do the same, or the users' classification of a
+// node depends on which code path created it.
+//
+#ifdef __cplusplus
+static_assert(sizeof(CorNode) == 40,             "CorNode must stay 40 bytes");
+static_assert(offsetof(CorNode, termId) == 14,   "CorNode.termId must sit in the padding before 'value'");
+#else
+_Static_assert(sizeof(CorNode) == 40,            "CorNode must stay 40 bytes");
+_Static_assert(offsetof(CorNode, termId) == 14,  "CorNode.termId must sit in the padding before 'value'");
+#endif
 
 
 

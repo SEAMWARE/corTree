@@ -38,13 +38,18 @@ typedef struct CorNode
 {
   char*            name;       // NULL/"" for an array item
   CorValueType     type;       // CorString, CorInt, CorFloat, CorBoolean, CorNull, CorObject, CorArray
-  unsigned char    flags;      // for the users of the library; in the padding, born 0 under corAlloc
+  unsigned char    flags;      // for the users of the library - opaque to corTree
+  uint16_t         termId;     // for the users of the library (NGSI-LD: which core term, 0 = none) - opaque to corTree
   CorValue         value;      // b, i, f, s, or - for a container - head and tail
   struct CorNode*  next;       // next sibling
 } CorNode;
 ```
 
-40 bytes on a 64-bit machine.
+40 bytes on a 64-bit machine - `flags` and `termId` sit in the alignment padding
+between `type` and `value`, and `CorNode.h` asserts both the size and the offset.
+Every builder zeroes `flags` and `termId` (under `malloc` too), and `corTreeClone`
+copies them. Any other code that builds nodes (a parser, a database reader) must do
+the same.
 
 ## API
 

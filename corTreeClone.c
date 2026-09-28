@@ -100,7 +100,11 @@ CorNode* corTreeClone(CorAlloc* kaP, CorNode* nodeP)
 
   if (newNodeP == NULL)
     COR_E("Error cloning CorNode '%s' - out of memory?", nodeP->name);
-
+  else
+  {
+    newNodeP->flags  = nodeP->flags;
+    newNodeP->termId = nodeP->termId;
+  }
 
   return newNodeP;
 }

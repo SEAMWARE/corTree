@@ -54,6 +54,8 @@ CorNode* corTreeObject(CorAlloc* kaP, const char* name)
     nodeP->name = NULL;
 
   nodeP->type              = CorObject;
+  nodeP->flags             = 0;
+  nodeP->termId            = 0;
   nodeP->next              = NULL;
   nodeP->value.head = NULL;
   nodeP->value.tail        = NULL;
@@ -93,6 +95,8 @@ CorNode* corTreeArray(CorAlloc* kaP, const char* name)
     nodeP->name = NULL;
 
   nodeP->type              = CorArray;
+  nodeP->flags             = 0;
+  nodeP->termId            = 0;
   nodeP->next              = NULL;
   nodeP->value.head = NULL;
   nodeP->value.tail        = NULL;
@@ -148,6 +152,8 @@ CorNode* corTreeString(CorAlloc* kaP, const char* name, const char* value)
     nodeP->name = NULL;
 
   nodeP->type        = CorString;
+  nodeP->flags       = 0;
+  nodeP->termId      = 0;
   nodeP->next        = NULL;
 
   if (value != NULL)
@@ -196,6 +202,8 @@ CorNode* corTreeInteger(CorAlloc* kaP, const char* name, long long value)
     nodeP->name = NULL;
 
   nodeP->type     = CorInt;
+  nodeP->flags    = 0;
+  nodeP->termId   = 0;
   nodeP->value.i  = value;
 
   return nodeP;
@@ -234,6 +242,8 @@ CorNode* corTreeFloat(CorAlloc* kaP, const char* name, double value)
     nodeP->name = NULL;
 
   nodeP->type     = CorFloat;
+  nodeP->flags    = 0;
+  nodeP->termId   = 0;
   nodeP->value.f  = value;
 
   return nodeP;
@@ -271,6 +281,8 @@ CorNode* corTreeNull(CorAlloc* kaP, const char* name)
     nodeP->name = NULL;
 
   nodeP->type = CorNull;
+  nodeP->flags= 0;
+  nodeP->termId = 0;
 
   return nodeP;
 }
@@ -308,6 +320,8 @@ CorNode* corTreeBoolean(CorAlloc* kaP, const char* name, bool value)
     nodeP->name = NULL;
 
   nodeP->type     = CorBoolean;
+  nodeP->flags    = 0;
+  nodeP->termId   = 0;
   nodeP->value.b  = value;
 
   return nodeP;
