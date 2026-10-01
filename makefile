@@ -29,6 +29,7 @@ CFLAGS        = -std=c11 -O2 -Wall -Wextra -Werror -fPIC -fstack-protector-stron
 
 LIB_SOURCES   = CorNode.c                          \
                 corTreeArraySort.c                 \
+                corTreeBin.c                       \
                 corTreeBuilder.c                   \
                 corTreeChildAddOrReplace.c         \
                 corTreeChildCount.c                \
