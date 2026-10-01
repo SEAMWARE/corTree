@@ -437,8 +437,11 @@ static bool nodeEncode(CorNode* nodeP, const CorBinCodec* codecP, CorBinTables* 
 
   if ((inArray == false) && (nodeP->name != NULL))
   {
-    nameTerm = nodeP->termId;
-    if ((nameTerm == 0) && (codecP != NULL) && (codecP->nameTermId != NULL))
+    //
+    // Only through the callback: node->termId is the user's, and opaque here - corNgsild keeps a
+    // "not a core term" marker in it (0x8000), which as an id on the wire would be nonsense
+    //
+    if ((codecP != NULL) && (codecP->nameTermId != NULL))
       nameTerm = codecP->nameTermId(nodeP);
 
     if ((nameTerm != 0) && (codecP != NULL) && (codecP->termName != NULL))
