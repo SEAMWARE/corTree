@@ -47,7 +47,8 @@ typedef struct CorBinCodec
 {
   //
   // nameTermId - the core-term id of a node's NAME, 0 when it is not one.
-  // NULL: names travel as strings (node->termId is still used when it is set).
+  // NULL: names travel as strings. The codec never reads node->termId itself - it is opaque to
+  // corTree - but a decoded node's termId IS set to the id it arrived as.
   //
   uint16_t     (*nameTermId)(CorNode* nodeP);
 
