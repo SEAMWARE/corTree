@@ -235,16 +235,27 @@ static bool room(CorBinBuffer* bP, int n)
   if (bP->len + n <= bP->size)
     return true;
 
-  int   size = (bP->size == 0) ? 256 : bP->size;
-  while (size < bP->len + n)
-    size *= 2;
+  //
+  // In 64 bits, and refused past an int - CorBinBuffer's length is one. Doubled in an int, a buffer
+  // past 1 GiB overflowed and this loop never ended
+  //
+  long long need = (long long) bP->len + n;
+  long long size = (bP->size == 0) ? 256 : bP->size;
 
-  char* buf = realloc(bP->buf, size);
+  if (need > 0x7FFFFFFF)
+    return false;
+
+  while (size < need)
+    size *= 2;
+  if (size > 0x7FFFFFFF)
+    size = 0x7FFFFFFF;
+
+  char* buf = realloc(bP->buf, (size_t) size);
   if (buf == NULL)
     return false;
 
   bP->buf  = buf;
-  bP->size = size;
+  bP->size = (int) size;
 
   return true;
 }
