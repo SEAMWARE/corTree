@@ -108,3 +108,41 @@ CorNode* corTreeClone(CorAlloc* kaP, CorNode* nodeP)
 
   return newNodeP;
 }
+
+
+
+// -----------------------------------------------------------------------------
+//
+// corTreeCloneMarked -
+//
+CorNode* corTreeCloneMarked(CorAlloc* kaP, CorNode* nodeP, unsigned char mask, CorTreeMarkFn fn, void* ctx)
+{
+  if ((nodeP->type != CorObject) && (nodeP->type != CorArray))
+    return corTreeClone(kaP, nodeP);
+
+  CorNode* newNodeP = (nodeP->type == CorObject) ? corTreeObject(kaP, nodeP->name) : corTreeArray(kaP, nodeP->name);
+
+  if (newNodeP == NULL)
+  {
+    COR_E("Error cloning CorNode '%s' - out of memory?", nodeP->name);
+    return NULL;
+  }
+
+  for (CorNode* itemP = nodeP->value.head; itemP != NULL; itemP = itemP->next)
+  {
+    CorNode* cloneP = corTreeCloneMarked(kaP, itemP, mask, fn, ctx);
+
+    if (cloneP == NULL)
+      return NULL;
+
+    corTreeChildAdd(newNodeP, cloneP);
+  }
+
+  newNodeP->flags  = nodeP->flags & ~mask;
+  newNodeP->termId = nodeP->termId;
+
+  if (((nodeP->flags & mask) != 0) && (fn != NULL))
+    fn(kaP, newNodeP, nodeP, ctx);
+
+  return newNodeP;
+}
