@@ -34,8 +34,9 @@ typedef void (*CorTreeMarkFn)(CorAlloc* kaP, CorNode* copyP, CorNode* origP, voi
 
 // -----------------------------------------------------------------------------
 //
-// corTreeCloneMarked - corTreeClone, and for every container whose flags have a bit of 'mask': 'fn' on
-// its clone, after its children. The clone carries no bit of 'mask'.
+// corTreeCloneMarked - corTreeClone, and for every container whose flags have a bit of 'mask', or that
+// has a kind: 'fn' on its clone, after its children. The clone carries no bit of 'mask' and no kind -
+// 'fn' puts back what the original keeps in them.
 //
 // For a user that marks containers with something the clone must get and the original leaves out - one
 // pass, the clone's own, instead of a walk of its own over every node.

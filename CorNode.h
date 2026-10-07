@@ -69,23 +69,30 @@ typedef struct CorNode
   char*           name;        // The name of the node, "" if father is an Array
   CorValueType     type;        // The type of the node. Number, String, Object, Array, ...
   unsigned char   flags;       // Bit flags for users of the lib - opaque to corTree
+  unsigned char   kind;        // What an object IS for users of the lib (NGSI-LD: an attribute's type, 0 = none) - opaque to corTree
   uint16_t        termId;      // Term id for users of the lib (NGSI-LD: which core term, 0 = none) - opaque to corTree
   CorValue         value;       // The value of the node - see CorValue
   struct CorNode*  next;        // Pointer to the next Sibling
 } CorNode;
 
 //
-// flags and termId live in the type->value alignment padding: the node stays 40 bytes.
-// Every builder zeroes both and corTreeClone copies both - a tree builder that does
+// flags, kind and termId live in the type->value alignment padding: the node stays 40 bytes.
+// Every builder zeroes all three and corTreeClone copies all three - a tree builder that does
 // neither (a parser, a DB reader) must do the same, or the users' classification of a
 // node depends on which code path created it.
+//
+// kind is cor://'s object kind (cor-protocol-details § 4.2) held in the node: a user that knows what
+// an object is - an NGSI-LD store, an attribute's type - can keep it here instead of in a member, and
+// corTreeBin writes it as the object's kind with nothing to fold. 0: a plain object.
 //
 #ifdef __cplusplus
 static_assert(sizeof(CorNode) == 40,             "CorNode must stay 40 bytes");
 static_assert(offsetof(CorNode, termId) == 14,   "CorNode.termId must sit in the padding before 'value'");
+static_assert(offsetof(CorNode, kind) == 13,     "CorNode.kind must sit in the padding before 'value'");
 #else
 _Static_assert(sizeof(CorNode) == 40,            "CorNode must stay 40 bytes");
 _Static_assert(offsetof(CorNode, termId) == 14,  "CorNode.termId must sit in the padding before 'value'");
+_Static_assert(offsetof(CorNode, kind) == 13,    "CorNode.kind must sit in the padding before 'value'");
 #endif
 
 

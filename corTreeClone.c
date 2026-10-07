@@ -103,6 +103,7 @@ CorNode* corTreeClone(CorAlloc* kaP, CorNode* nodeP)
   else
   {
     newNodeP->flags  = nodeP->flags;
+    newNodeP->kind   = nodeP->kind;
     newNodeP->termId = nodeP->termId;
   }
 
@@ -139,9 +140,11 @@ CorNode* corTreeCloneMarked(CorAlloc* kaP, CorNode* nodeP, unsigned char mask, C
   }
 
   newNodeP->flags  = nodeP->flags & ~mask;
+  newNodeP->kind   = 0;
   newNodeP->termId = nodeP->termId;
 
-  if (((nodeP->flags & mask) != 0) && (fn != NULL))
+  // A kind is a mark too: what the original keeps in it, the clone gets back as the user puts it
+  if ((((nodeP->flags & mask) != 0) || (nodeP->kind != 0)) && (fn != NULL))
     fn(kaP, newNodeP, nodeP, ctx);
 
   return newNodeP;
