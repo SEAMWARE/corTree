@@ -440,11 +440,11 @@ void corTreeChildAddSorted(CorNode* container, CorNode* child)
   // Find where to insert the new node
   CorNode* current     = container->value.head;
   CorNode* prev        = NULL;
-  char    childName0  = child->name[0];
+  unsigned char childName0 = (unsigned char) child->name[0];   // unsigned - as strcmp compares, the same order on every architecture
 
   while (current != NULL)
   {
-    char currentName0 = current->name[0];
+    unsigned char currentName0 = (unsigned char) current->name[0];
 
     if (childName0 > currentName0)
     {
@@ -535,11 +535,11 @@ void corTreeChildAddSortedReverse(CorNode* container, CorNode* child)
   // Find where to insert the new node
   CorNode* current     = container->value.head;
   CorNode* prev        = NULL;
-  char    childName0  = child->name[0];
+  unsigned char childName0 = (unsigned char) child->name[0];   // unsigned - as strcmp compares, the same order on every architecture
 
   while (current != NULL)
   {
-    char currentName0 = current->name[0];
+    unsigned char currentName0 = (unsigned char) current->name[0];
 
     if (childName0 < currentName0)
     {
