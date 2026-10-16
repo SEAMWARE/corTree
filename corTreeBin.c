@@ -60,9 +60,18 @@ enum
   NS_INDEX_BASE     = 2         // 2 + an index into the namespace table
 };
 
+//
+// A core-term id - the first byte says how long it is:
+//   0x00-0xEF            the id itself: 0-239, one byte
+//   0xF0-0xFE  b         240 + ((first - 0xF0) << 8 | b): 240-4079, two bytes
+//   0xFF       lo hi     the id, little-endian: three bytes - any id, the rest
+//
 enum
 {
-  TERM_ESCAPE       = 0xFF      // a core-term id: one byte, or 0xFF + two bytes
+  TERM_TWO_LEAD     = 0xF0,
+  TERM_TWO_BASE     = 240,
+  TERM_TWO_END      = 240 + 15 * 256,   // 4080: the first id that does not fit in two bytes
+  TERM_ESCAPE       = 0xFF
 };
 
 
@@ -344,12 +353,19 @@ static bool putVarint(CorBinBuffer* bP, uint64_t v)
 
 // -----------------------------------------------------------------------------
 //
-// putTerm - a core-term id: one byte, or the escape and two
+// putTerm - a core-term id: one byte, two, or the escape and two (the enum above)
 //
 static bool putTerm(CorBinBuffer* bP, uint16_t termId)
 {
-  if (termId < TERM_ESCAPE)
+  if (termId < TERM_TWO_BASE)
     return putByte(bP, (uint8_t) termId);
+
+  if (termId < TERM_TWO_END)
+  {
+    unsigned int v      = termId - TERM_TWO_BASE;
+    uint8_t      two[2] = { (uint8_t) (TERM_TWO_LEAD + (v >> 8)), (uint8_t) (v & 0xFF) };
+    return put(bP, two, 2);
+  }
 
   uint8_t v[3] = { TERM_ESCAPE, (uint8_t) (termId & 0xFF), (uint8_t) (termId >> 8) };
   return put(bP, v, 3);
@@ -730,6 +746,15 @@ static const char* getTerm(Reader* rP, uint16_t* termIdP)
       return NULL;
 
     termId = (uint16_t) (lo | (hi << 8));
+  }
+  else if (b >= TERM_TWO_LEAD)
+  {
+    uint8_t low;
+
+    if (getByte(rP, &low) == false)
+      return NULL;
+
+    termId = (uint16_t) (TERM_TWO_BASE + (((b - TERM_TWO_LEAD) << 8) | low));
   }
 
   const char* name = ((rP->codecP != NULL) && (rP->codecP->termName != NULL)) ? rP->codecP->termName(termId) : NULL;
