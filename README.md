@@ -29,7 +29,11 @@ itself:
 CorNode* corTreeString(CorAlloc* kaP, const char* name, const char* value);
 ```
 
-`NULL` still means `malloc`, exactly as a `NULL` `Kjson*` did.
+`NULL` means the tree heap (`corTreeHeap.h`): the trees that live on, freed node by node with
+`corTreeFree`. A node, its name and a string value are one block there, as with `malloc`, but
+8-byte aligned and without `malloc`'s header - blocks of one size per 16 KiB page, and a free finds
+the size by the page, not in the node. `COR_TREE_HEAP=malloc`, and a build with AddressSanitizer,
+use `malloc` instead (valgrind and ASan see a block's bounds only in `malloc`'s).
 
 ## The node
 
@@ -37,19 +41,28 @@ CorNode* corTreeString(CorAlloc* kaP, const char* name, const char* value);
 typedef struct CorNode
 {
   char*            name;       // NULL/"" for an array item
+  struct CorNode*  next;       // next sibling
   CorValueType     type;       // CorString, CorInt, CorFloat, CorBoolean, CorNull, CorObject, CorArray
   unsigned char    flags;      // for the users of the library - opaque to corTree
+  unsigned char    kind;       // what an object is, for the users of the library - opaque to corTree
   uint16_t         termId;     // for the users of the library (NGSI-LD: which core term, 0 = none) - opaque to corTree
-  CorValue         value;      // b, i, f, s, or - for a container - head and tail
-  struct CorNode*  next;       // next sibling
+  CorValue         value;      // b, i, f, s, or - for a container - head and tail. LAST
 } CorNode;
 ```
 
-40 bytes on a 64-bit machine - `flags` and `termId` sit in the alignment padding
-between `type` and `value`, and `CorNode.h` asserts both the size and the offset.
-Every builder zeroes `flags` and `termId` (under `malloc` too), and `corTreeClone`
-copies them. Any other code that builds nodes (a parser, a database reader) must do
-the same.
+40 bytes on a 64-bit machine - `flags`, `kind` and `termId` share 8 bytes with `type`, and
+`CorNode.h` asserts the size and the offsets. Every builder zeroes them, and `corTreeClone`
+copies them. Any other code that builds nodes (a parser, a database reader) must do the same.
+
+A prefix layout: `value` is last, and its last 8 bytes - `value.tail` - are a container's only.
+`corTreeClone(NULL, ...)` - the clone into the tree heap - allocates a node that is not a container
+without them: 32 bytes. Such a node is never made a container in place, and never copied whole
+(`*a = *b`) - `corTreeNodeCopy` copies the bytes it has. Every other builder allocates 40.
+
+The layout has a number, `corNodeLayout` (2), which every object built with `CorNode.h` carries;
+it also requires `corNodeLayout2`, defined by this corTree. A plugin built against another layout
+than its broker is refused either way, instead of reading every node at the wrong offsets - see
+coraine's doc/plugin-architecture.md, "The CorNode layout".
 
 ## API
 
