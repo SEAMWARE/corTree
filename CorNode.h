@@ -104,6 +104,33 @@ _Static_assert(offsetof(CorNode, value.tail) == 32,    "CorNode.value.tail must 
 
 // -----------------------------------------------------------------------------
 //
+// corNodeLayout - the CorNode layout this code is compiled against: 2, the prefix layout above (value last).
+// Layout 1, before it - value before next - had no corNodeLayout.
+//
+// Defined in every object that includes this header - weak, so they are one - and exported, also from a
+// plugin built -fvisibility=hidden: a plugin carries the layout it was built with, and the broker refuses
+// one built against another (corPlugin/corPluginOpen). It would read every node at the wrong offsets.
+// A change of the layout is a new number here.
+//
+// The other way round - a plugin built against layout 2 in a broker from before it - is refused by the
+// broker's dynamic linker: every object that includes this header REFERENCES corNodeLayout2, which only a
+// corTree with this layout defines (CorNode.c). A broker without it fails the plugin's dlopen with
+// "undefined symbol: corNodeLayout2" - an error, not a crash - and does not start. A change of the layout
+// is a new name too.
+//
+#ifdef __cplusplus
+extern "C" __attribute__((weak, used, visibility("default"))) const int corNodeLayout = 2;
+extern "C" const int corNodeLayout2;
+#else
+__attribute__((weak, used, visibility("default"))) const int corNodeLayout = 2;
+extern const int corNodeLayout2;
+#endif
+__attribute__((used)) static const int* const corNodeLayoutRequired = &corNodeLayout2;
+
+
+
+// -----------------------------------------------------------------------------
+//
 // corTreeValueType -
 //
 extern const char* corTreeValueType(CorValueType vt);

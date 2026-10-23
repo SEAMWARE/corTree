@@ -17,6 +17,14 @@
 
 // -----------------------------------------------------------------------------
 //
+// corNodeLayout2 - this corTree has CorNode layout 2: what every object built against it requires (CorNode.h)
+//
+__attribute__((visibility("default"))) const int corNodeLayout2 = 2;
+
+
+
+// -----------------------------------------------------------------------------
+//
 // corTreeValueType -
 //
 const char* corTreeValueType(CorValueType vt)
