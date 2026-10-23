@@ -38,6 +38,7 @@ LIB_SOURCES   = CorNode.c                          \
                 corTreeChildReplace.c              \
                 corTreeClone.c                     \
                 corTreeFree.c                      \
+                corTreeHeap.c                      \
                 corTreeLookup.c                    \
                 corTreeNavigate.c                  \
                 corTreeNodeDecouple.c              \
