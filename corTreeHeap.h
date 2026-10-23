@@ -15,8 +15,9 @@
 // A free looks the class up by the page - nothing in the node is read, so a node whose name or value was
 // changed after it was built is freed as exactly what it was allocated as.
 //
-// Blocks over 1024 bytes, and every block when the environment variable COR_TREE_HEAP is "malloc" (ASan,
-// valgrind), are plain malloc. corTreeHeapFree tells the two apart by address.
+// Blocks over 1024 bytes are plain malloc, and so is every block in a build with AddressSanitizer and when
+// the environment variable COR_TREE_HEAP is "malloc" (valgrind): those see a block's bounds in malloc's
+// only. corTreeHeapFree tells the two apart by address.
 //
 #include <stdint.h>                               // uint64_t
 

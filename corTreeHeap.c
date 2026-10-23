@@ -55,6 +55,10 @@ static HeapClass         classV[128];
 //
 static void heapInit(void)
 {
+#ifdef __SANITIZE_ADDRESS__
+  return;    // ASan sees each block's bounds only in malloc's
+#endif
+
   const char* env = getenv("COR_TREE_HEAP");
 
   if ((env != NULL) && (strcmp(env, "malloc") == 0))
