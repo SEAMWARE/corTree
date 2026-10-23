@@ -41,6 +41,7 @@ LIB_SOURCES   = CorNode.c                          \
                 corTreeHeap.c                      \
                 corTreeLookup.c                    \
                 corTreeNavigate.c                  \
+                corTreeNodeCopy.c                  \
                 corTreeNodeDecouple.c              \
                 corTreeSort.c                      \
                 corTreeStringArraySort.c           \

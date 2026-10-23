@@ -7,14 +7,67 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 //
+#include <stdbool.h>                    // bool
+#include <stddef.h>                     // offsetof
 #include <stdio.h>                      // NULL
-#include <string.h>                     // strcmp
+#include <string.h>                     // strlen, memcpy
 
 #include "corLog/corLog.h"                // COR_E, COR_RE, COR_T
 #include "corAlloc/CorAlloc.h"             // CorAlloc
 #include "corTree/CorNode.h"               // CorNode
 #include "corTree/corTreeBuilder.h"            // corTreeString, corTreeArray, corTreeFloat, ...
+#include "corTree/corTreeHeap.h"               // corTreeHeapAlloc
 #include "corTree/corTreeClone.h"              // Own Interface
+
+
+
+// -----------------------------------------------------------------------------
+//
+// heapClone - corTreeClone into the tree heap: the trees that live on (a store's entities, the caches).
+//
+// A node that is not a container is allocated without the container's tail (CorNode.h): 32 bytes, not 40.
+// Its name and a string value follow it, in the same block.
+//
+static CorNode* heapClone(CorNode* nodeP)
+{
+  bool     container = (nodeP->type == CorObject) || (nodeP->type == CorArray);
+  int      nodeBytes = container? (int) sizeof(CorNode) : (int) offsetof(CorNode, value.tail);
+  int      nameLen   = (nodeP->name != NULL)? strlen(nodeP->name) + 1 : 0;
+  int      valueLen  = ((nodeP->type == CorString) && (nodeP->value.s != NULL))? strlen(nodeP->value.s) + 1 : 0;
+  char*    buf       = corTreeHeapAlloc(nodeBytes + nameLen + valueLen);
+  CorNode* copyP     = (CorNode*) buf;
+
+  if (buf == NULL)
+  {
+    COR_E("Error cloning CorNode '%s' - out of memory?", nodeP->name);
+    return NULL;
+  }
+
+  memcpy(copyP, nodeP, nodeBytes);   // type, flags, kind, termId and a scalar's value
+  copyP->next = NULL;
+  copyP->name = (nameLen != 0)? memcpy(&buf[nodeBytes], nodeP->name, nameLen) : NULL;
+
+  if (valueLen != 0)
+    copyP->value.s = memcpy(&buf[nodeBytes + nameLen], nodeP->value.s, valueLen);
+
+  if (container)
+  {
+    copyP->value.head = NULL;
+    copyP->value.tail = NULL;
+
+    for (CorNode* itemP = nodeP->value.head; itemP != NULL; itemP = itemP->next)
+    {
+      CorNode* cloneP = heapClone(itemP);
+
+      if (cloneP == NULL)
+        return NULL;
+
+      corTreeChildAdd(copyP, cloneP);
+    }
+  }
+
+  return copyP;
+}
 
 
 
@@ -25,6 +78,9 @@
 CorNode* corTreeClone(CorAlloc* kaP, CorNode* nodeP)
 {
   CorNode* newNodeP = NULL;
+
+  if (kaP == NULL)
+    return heapClone(nodeP);
 
   switch (nodeP->type)
   {
