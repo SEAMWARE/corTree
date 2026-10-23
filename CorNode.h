@@ -67,32 +67,37 @@ typedef union CorValue
 typedef struct CorNode
 {
   char*           name;        // The name of the node, "" if father is an Array
+  struct CorNode*  next;        // Pointer to the next Sibling
   CorValueType     type;        // The type of the node. Number, String, Object, Array, ...
   unsigned char   flags;       // Bit flags for users of the lib - opaque to corTree
   unsigned char   kind;        // What an object IS for users of the lib (NGSI-LD: an attribute's type, 0 = none) - opaque to corTree
   uint16_t        termId;      // Term id for users of the lib (NGSI-LD: which core term, 0 = none) - opaque to corTree
-  CorValue         value;       // The value of the node - see CorValue
-  struct CorNode*  next;        // Pointer to the next Sibling
+  CorValue         value;       // The value of the node - see CorValue. LAST: only a container has a tail
 } CorNode;
 
 //
-// flags, kind and termId live in the type->value alignment padding: the node stays 40 bytes.
-// Every builder zeroes all three and corTreeClone copies all three - a tree builder that does
-// neither (a parser, a DB reader) must do the same, or the users' classification of a
-// node depends on which code path created it.
+// flags, kind and termId share 8 bytes with type: the node stays 40 bytes. Every builder zeroes all
+// three and corTreeClone copies all three - a tree builder that does neither (a parser, a DB reader)
+// must do the same, or the users' classification of a node depends on which code path created it.
 //
 // kind is cor://'s object kind (cor-protocol-details § 4.2) held in the node: a user that knows what
 // an object is - an NGSI-LD store, an attribute's type - can keep it here instead of in a member, and
 // corTreeBin writes it as the object's kind with nothing to fold. 0: a plain object.
 //
+// A prefix layout: the value is last, and its last 8 bytes - value.tail - are a container's only. A
+// node that is not a container can be allocated without them, 32 bytes instead of 40, and the trees
+// that live on are: corTreeClone(NULL, ...) - the clone into the tree heap - does it. Such a node is
+// never made a container in place, and never copied whole (*a = *b) into a 40-byte node's place; a
+// change of size is a new node, put where the old one was.
+//
 #ifdef __cplusplus
-static_assert(sizeof(CorNode) == 40,             "CorNode must stay 40 bytes");
-static_assert(offsetof(CorNode, termId) == 14,   "CorNode.termId must sit in the padding before 'value'");
-static_assert(offsetof(CorNode, kind) == 13,     "CorNode.kind must sit in the padding before 'value'");
+static_assert(sizeof(CorNode) == 40,                   "CorNode must stay 40 bytes");
+static_assert(offsetof(CorNode, value) == 24,          "CorNode.value must be last");
+static_assert(offsetof(CorNode, value.tail) == 32,     "CorNode.value.tail must be the node's last 8 bytes");
 #else
-_Static_assert(sizeof(CorNode) == 40,            "CorNode must stay 40 bytes");
-_Static_assert(offsetof(CorNode, termId) == 14,  "CorNode.termId must sit in the padding before 'value'");
-_Static_assert(offsetof(CorNode, kind) == 13,    "CorNode.kind must sit in the padding before 'value'");
+_Static_assert(sizeof(CorNode) == 40,                  "CorNode must stay 40 bytes");
+_Static_assert(offsetof(CorNode, value) == 24,         "CorNode.value must be last");
+_Static_assert(offsetof(CorNode, value.tail) == 32,    "CorNode.value.tail must be the node's last 8 bytes");
 #endif
 
 
