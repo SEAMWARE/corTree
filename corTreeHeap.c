@@ -14,7 +14,7 @@
 #include <stdint.h>                               // uint8_t, uint64_t
 #include <stdlib.h>                               // malloc, free, getenv
 #include <string.h>                               // strcmp
-#include <sys/mman.h>                             // mmap
+#include <sys/mman.h>                             // mmap, madvise
 
 #include "corLog/corLog.h"                        // COR_W
 #include "corTree/corTreeHeap.h"                  // Own interface
@@ -74,6 +74,13 @@ static void heapInit(void)
       for (int ix = 0; ix < 128; ix++)
         pthread_mutex_init(&classV[ix].mutex, NULL);
 
+      //
+      // Out of a core dump until used: a dump to a pipe (apport, systemd-coredump) writes every page of a
+      // mapping, the untouched ones as zeros - 64 GiB of them, and the crashing broker took minutes to die.
+      // A 64 MiB window is put back in as its first page is handed out (corTreeHeapAlloc)
+      //
+      madvise(startP, size, MADV_DONTDUMP);
+
       pageClassV = (uint8_t*) tableP;
       heapSize   = size;
       heapStart  = (char*) startP;    // last: corTreeHeapFree's range check reads it
@@ -123,6 +130,9 @@ void* corTreeHeapAlloc(int size)
         pthread_mutex_unlock(&cP->mutex);
         return malloc(size);    // the range is full
       }
+
+      if ((offset & ((64ULL << 20) - 1)) == 0)    // a new 64 MiB window: in a core dump from now on
+        madvise(heapStart + offset, (heapSize - offset < (64ULL << 20))? heapSize - offset : (64ULL << 20), MADV_DODUMP);
 
       pageClassV[offset >> 14] = (uint8_t) ix;
       cP->next = heapStart + offset;
