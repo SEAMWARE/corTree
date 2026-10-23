@@ -9,7 +9,7 @@
 //
 #include <stdio.h>                           // NULL
 #include <string.h>                          // strcmp
-#include <stdlib.h>                          // malloc
+#include <stdlib.h>                          // NULL
 
 #include <stdbool.h>                              // bool
 #include "corLog/corLog.h"                // COR_E, COR_RE, COR_T
@@ -18,6 +18,7 @@
 #include "corTree/corTreeTraceLevels.h"             // KJ Log Trace Levels
 #include "corAlloc/CorAlloc.h"              // CorAlloc
 #include "corTree/CorNode.h"                    // CorNode
+#include "corTree/corTreeHeap.h"                 // corTreeHeapAlloc
 #include "corTree/corTreeBuilder.h"                 // Own Interface
 
 
@@ -29,7 +30,7 @@
 // corTreeObject - create a kjson object
 //
 // PARAMETERS
-//   kaP   - the allocator; NULL means malloc
+//   kaP   - the allocator; NULL means the tree heap (corTreeHeap.h)
 //   name  - the name of the object
 //
 // RETURN VALUE
@@ -39,7 +40,7 @@ CorNode* corTreeObject(CorAlloc* kaP, const char* name)
 {
   int     nameLen = (name == NULL)? 0 : strlen(name);
   int     bufLen  = sizeof(CorNode) + nameLen + 1;
-  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : malloc(bufLen);
+  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : corTreeHeapAlloc(bufLen);
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)
@@ -71,7 +72,7 @@ CorNode* corTreeObject(CorAlloc* kaP, const char* name)
 // corTreeArray - create a kjson array
 //
 // PARAMETERS
-//   kaP   - the allocator; NULL means malloc
+//   kaP   - the allocator; NULL means the tree heap (corTreeHeap.h)
 //   name  - the name of the array
 //
 // RETURN VALUE
@@ -81,7 +82,7 @@ CorNode* corTreeArray(CorAlloc* kaP, const char* name)
 {
   int     nameLen = (name == NULL)? 0 : strlen(name);
   int     bufLen  = sizeof(CorNode) + nameLen + 1;
-  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : malloc(bufLen);
+  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : corTreeHeapAlloc(bufLen);
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)
@@ -113,7 +114,7 @@ CorNode* corTreeArray(CorAlloc* kaP, const char* name)
 // corTreeString -
 //
 // PARAMETERS
-//   kaP   - the allocator; NULL means malloc
+//   kaP   - the allocator; NULL means the tree heap (corTreeHeap.h)
 //   name  - the name of the string field
 //   value - the content of the string
 //
@@ -128,7 +129,7 @@ CorNode* corTreeString(CorAlloc* kaP, const char* name, const char* value)
   int     nameLen  = (name  != NULL)?  strlen(name) : 0;
   int     valueLen = (value != NULL)?  strlen(value) : 0;
   int     bufLen   = sizeof(CorNode) + nameLen + 1 + valueLen + 1;
-  char*   buf      = (kaP != NULL)? corAlloc(kaP, bufLen) : malloc(bufLen);
+  char*   buf      = (kaP != NULL)? corAlloc(kaP, bufLen) : corTreeHeapAlloc(bufLen);
   CorNode* nodeP    = (CorNode*) buf;
 
   if (nodeP == NULL)
@@ -179,7 +180,7 @@ CorNode* corTreeString(CorAlloc* kaP, const char* name, const char* value)
 // corTreeInteger -
 //
 // PARAMETERS
-//   kaP   - the allocator; NULL means malloc
+//   kaP   - the allocator; NULL means the tree heap (corTreeHeap.h)
 //   name  - the name of the integer field
 //   value - the value of the integer field
 //
@@ -190,7 +191,7 @@ CorNode* corTreeInteger(CorAlloc* kaP, const char* name, long long value)
 {
   int     nameLen = (name == NULL)? 0 : strlen(name);
   int     bufLen  = sizeof(CorNode) + nameLen + 1;
-  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : malloc(bufLen);
+  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : corTreeHeapAlloc(bufLen);
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)
@@ -220,7 +221,7 @@ CorNode* corTreeInteger(CorAlloc* kaP, const char* name, long long value)
 // corTreeFloat -
 //
 // PARAMETERS
-//   kaP   - the allocator; NULL means malloc
+//   kaP   - the allocator; NULL means the tree heap (corTreeHeap.h)
 //   name  - the name of the field
 //   value - the value of the field
 //
@@ -231,7 +232,7 @@ CorNode* corTreeFloat(CorAlloc* kaP, const char* name, double value)
 {
   int     nameLen = (name == NULL)? 0 : strlen(name);
   int     bufLen  = sizeof(CorNode) + nameLen + 1;
-  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : malloc(bufLen);
+  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : corTreeHeapAlloc(bufLen);
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)
@@ -261,7 +262,7 @@ CorNode* corTreeFloat(CorAlloc* kaP, const char* name, double value)
 // corTreeNull -
 //
 // PARAMETERS
-//   kaP   - the allocator; NULL means malloc
+//   kaP   - the allocator; NULL means the tree heap (corTreeHeap.h)
 //   name  - the name of the field
 //
 // RETURN VALUE
@@ -271,7 +272,7 @@ CorNode* corTreeNull(CorAlloc* kaP, const char* name)
 {
   int     nameLen = (name == NULL)? 0 : strlen(name);
   int     bufLen  = sizeof(CorNode) + nameLen + 1;
-  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : malloc(bufLen);
+  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : corTreeHeapAlloc(bufLen);
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)
@@ -300,7 +301,7 @@ CorNode* corTreeNull(CorAlloc* kaP, const char* name)
 // corTreeBoolean -
 //
 // PARAMETERS
-//   kaP   - the allocator; NULL means malloc
+//   kaP   - the allocator; NULL means the tree heap (corTreeHeap.h)
 //   name  - the name of the boolean field
 //   value - the value of the boolean field
 //
@@ -311,7 +312,7 @@ CorNode* corTreeBoolean(CorAlloc* kaP, const char* name, bool value)
 {
   int     nameLen = (name == NULL)? 0 : strlen(name);
   int     bufLen  = sizeof(CorNode) + nameLen + 1;
-  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : malloc(bufLen);
+  char*   buf     = (kaP != NULL)? corAlloc(kaP, bufLen) : corTreeHeapAlloc(bufLen);
   CorNode* nodeP   = (CorNode*) buf;
 
   if (nodeP == NULL)

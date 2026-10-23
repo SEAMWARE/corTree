@@ -15,6 +15,7 @@
 
 #include "corTree/CorNode.h"               // CorNode
 #include "corTree/corTreeTraceLevels.h"        // CorTreeTlFree
+#include "corTree/corTreeHeap.h"               // corTreeHeapFree
 #include "corTree/corTreeFree.h"               // Own Interface
 
 
@@ -51,6 +52,6 @@ void corTreeFree(CorNode* kNodeP)
     free(kNodeP->value.s);  // Seems to give problems sometimes with "Invalid free()" ...
 #endif
 
-  // Remember that the name of the node (kNodeP->name) is allocated together with the kNodeP itself. Only one free needed
-  free(kNodeP);
+  // The name (and a string value) were allocated together with the node: one block
+  corTreeHeapFree(kNodeP);
 }
