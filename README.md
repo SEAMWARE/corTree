@@ -51,7 +51,7 @@ typedef struct CorNode
 ```
 
 40 bytes on a 64-bit machine - `flags`, `kind` and `termId` share 8 bytes with `type`, and
-`CorNode.h` asserts the size and the offsets. Every builder zeroes them, and `corTreeClone`
+`CorNode.h` asserts the size and the offsets. Every builder zeroes them (and sets `next` to NULL), and `corTreeClone`
 copies them. Any other code that builds nodes (a parser, a database reader) must do the same.
 
 A prefix layout: `value` is last, and its last 8 bytes - `value.tail` - are a container's only.
@@ -70,9 +70,17 @@ coraine's doc/plugin-architecture.md, "The CorNode layout".
 |---|---|
 | build | `corTreeObject`, `corTreeArray`, `corTreeString`, `corTreeInteger`, `corTreeFloat`, `corTreeBoolean`, `corTreeNull` |
 | edit | `corTreeChildAdd`, `corTreeChildAddSorted`, `corTreeChildAddSortedReverse`, `corTreeChildPrepend`, `corTreeChildRemove`, `corTreeChildMove`, `corTreeChildReplace`, `corTreeChildAddOrReplace`, `corTreeNodeDecouple` |
-| find | `corTreeLookup`, `corTreeNavigate`, `corTreeStringSiblingFind`, `corTreeStringValueLookupInArray`, `corTreeChildCount` |
-| copy, free | `corTreeClone`, `corTreeFree` |
-| sort | `corTreeSort`, `corTreeArraySort`, `corTreeStringArraySort`, `corTreeStringArraySortedInsert` |
+| find | `corTreeLookup`, `corTreeLookupWithStrcmp`, `corTreeNavigate`, `corTreeNavigate2`, `corTreeStringSiblingFind`, `corTreeStringValueLookupInArray`, `corTreeChildCount` |
+| copy, free | `corTreeClone`, `corTreeCloneMarked`, `corTreeNodeCopy`, `corTreeFree` |
+| sort | `corTreeSort`, `corTreeArraySort`, `corTreeNodeCompare`, `corTreeStringArraySort`, `corTreeStringArraySortedInsert` |
+| tree heap | `corTreeHeapAlloc`, `corTreeHeapFree`, `corTreeHeapBytes` |
+| binary form | `corTreeBinTablesInit`, `corTreeBinTablesPreload`, `corTreeBinTablesRelease`, `corTreeBinEncode`, `corTreeBinDecode` |
+| describe | `corTreeValueType`, `corTreeValue` |
+
+`corTreeChildAdd` sets the child's `next` to NULL: a child still in another list is removed from
+it first (`corTreeChildRemove`), or that list ends at the child. `corTreeChildAddOrReplace` puts
+the new node in the old child's place - the old node is not overwritten - and returns the old one,
+out of the tree, for the caller to free (NULL if the node was added).
 
 ## Build
 
