@@ -16,8 +16,10 @@
 
 // -----------------------------------------------------------------------------
 //
-// corTreeChildAddOrReplace -
+// corTreeChildAddOrReplace - replace the child called 'itemName' by 'replacementP' (in its place), or add it
 //
-extern void corTreeChildAddOrReplace(CorNode* container, const char* itemName, CorNode* replacementP);
+// Returns the child replaced, out of the tree, or NULL if 'replacementP' was added.
+//
+extern CorNode* corTreeChildAddOrReplace(CorNode* container, const char* itemName, CorNode* replacementP);
 
 #endif  // CORTREE_CHILD_ADD_OR_REPLACE_H_

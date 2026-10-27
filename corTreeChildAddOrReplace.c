@@ -12,15 +12,24 @@
 #include "corTree/CorNode.h"                                      // CorNode
 #include "corTree/corTreeLookup.h"                                    // corTreeLookup
 #include "corTree/corTreeBuilder.h"                                   // corTreeChildAdd
+#include "corTree/corTreeChildReplace.h"                               // corTreeChildReplace
 #include "corTree/corTreeChildAddOrReplace.h"                         // Own interface
 
 
 
 // -----------------------------------------------------------------------------
 //
-// corTreeChildAddOrReplace -
+// corTreeChildAddOrReplace - replace the child called 'itemName' by 'replacementP', or add it
 //
-void corTreeChildAddOrReplace(CorNode* container, const char* itemName, CorNode* replacementP)
+// The replacement node takes the old child's place in the list - the old node is not overwritten:
+// a scalar on the tree heap is 32 bytes (CorNode.h), too small to become a container, and its name
+// follows it in the same block.
+//
+// RETURN VALUE
+//   The child that was replaced, now out of the tree (the caller frees it if it is on the tree heap),
+//   or NULL if 'replacementP' was added.
+//
+CorNode* corTreeChildAddOrReplace(CorNode* container, const char* itemName, CorNode* replacementP)
 {
   CorNode* itemToReplace = corTreeLookup(container, itemName);
 
@@ -28,8 +37,9 @@ void corTreeChildAddOrReplace(CorNode* container, const char* itemName, CorNode*
     corTreeChildAdd(container, replacementP);
   else
   {
-    itemToReplace->type  = replacementP->type;
-    itemToReplace->value = replacementP->value;
-    // CorNode::cSum and CorNode::valueString aren't used
+    corTreeChildReplace(container, itemToReplace, replacementP);
+    itemToReplace->next = NULL;
   }
+
+  return itemToReplace;
 }

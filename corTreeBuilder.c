@@ -209,6 +209,7 @@ CorNode* corTreeInteger(CorAlloc* kaP, const char* name, long long value)
   nodeP->flags    = 0;
   nodeP->kind     = 0;
   nodeP->termId   = 0;
+  nodeP->next     = NULL;
   nodeP->value.i  = value;
 
   return nodeP;
@@ -250,6 +251,7 @@ CorNode* corTreeFloat(CorAlloc* kaP, const char* name, double value)
   nodeP->flags    = 0;
   nodeP->kind     = 0;
   nodeP->termId   = 0;
+  nodeP->next     = NULL;
   nodeP->value.f  = value;
 
   return nodeP;
@@ -286,10 +288,11 @@ CorNode* corTreeNull(CorAlloc* kaP, const char* name)
   else
     nodeP->name = NULL;
 
-  nodeP->type = CorNull;
-  nodeP->flags= 0;
-  nodeP->kind = 0;
+  nodeP->type   = CorNull;
+  nodeP->flags  = 0;
+  nodeP->kind   = 0;
   nodeP->termId = 0;
+  nodeP->next   = NULL;
 
   return nodeP;
 }
@@ -330,6 +333,7 @@ CorNode* corTreeBoolean(CorAlloc* kaP, const char* name, bool value)
   nodeP->flags    = 0;
   nodeP->kind     = 0;
   nodeP->termId   = 0;
+  nodeP->next     = NULL;
   nodeP->value.b  = value;
 
   return nodeP;
@@ -346,8 +350,9 @@ CorNode* corTreeBoolean(CorAlloc* kaP, const char* name, bool value)
 //   child     - pointer to the child to be added
 //
 // NOTE
-//   The child is appended to the list of children.
-//   If 'child' is already part of a linked list, it will be removed from that list.
+//   The child is appended to the list of children, and its 'next' set to NULL.
+//   A child that is part of another list must be removed from it first (corTreeChildRemove) - else
+//   that list is cut after the child.
 //
 void corTreeChildAdd(CorNode* container, CorNode* child)
 {
