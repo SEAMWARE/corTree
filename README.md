@@ -32,7 +32,9 @@ CorNode* corTreeString(CorAlloc* kaP, const char* name, const char* value);
 `NULL` means the tree heap (`corTreeHeap.h`): the trees that live on, freed node by node with
 `corTreeFree`. A node, its name and a string value are one block there, as with `malloc`, but
 8-byte aligned and without `malloc`'s header - blocks of one size per 16 KiB page, and a free finds
-the size by the page, not in the node. `COR_TREE_HEAP=malloc`, and a build with AddressSanitizer,
+the size by the page, not in the node. Each thread keeps its own free blocks of each size, up to
+8 KiB of them, and takes and frees those with no lock; the shared lists are visited a batch at a
+time, and a thread that ends gives its blocks back. `COR_TREE_HEAP=malloc`, and a build with AddressSanitizer,
 use `malloc` instead (valgrind and ASan see a block's bounds only in `malloc`'s).
 
 ## The node

@@ -15,6 +15,10 @@
 // A free looks the class up by the page - nothing in the node is read, so a node whose name or value was
 // changed after it was built is freed as exactly what it was allocated as.
 //
+// Each thread caches free blocks of each class (up to 8 KiB of a class) and allocates and frees from them
+// with no lock; the class's shared free list and page are visited a batch at a time, under its mutex. A
+// thread that ends gives its cache back to the classes.
+//
 // Blocks over 1024 bytes are plain malloc, and so is every block in a build with AddressSanitizer and when
 // the environment variable COR_TREE_HEAP is "malloc" (valgrind): those see a block's bounds in malloc's
 // only. corTreeHeapFree tells the two apart by address.
